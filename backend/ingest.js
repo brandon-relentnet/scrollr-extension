@@ -1,9 +1,10 @@
+// ingest.js is a script that fetches data from the ESPN API and upserts it into the Aurora database.
 require('dotenv').config()
 const axios = require('axios')
 const { Client } = require('pg')
 const leagueConfigs = require('./leagueConfigs')
 
-async function main() {
+async function ingestData() {
   // 1. Connect to Aurora
   const client = new Client({
     host: process.env.DB_HOST,
@@ -118,4 +119,5 @@ async function main() {
   }
 }
 
-main()
+// Export our function so server.js can call it
+module.exports = { ingestData }
