@@ -90,7 +90,15 @@ async function areAllGamesFinal(league) {
  * Returns all games from the "games" table.
  */
 async function getAllGames() {
-    const query = `SELECT * FROM games ORDER BY start_time ASC`
+    const query = `
+        SELECT *
+        FROM games
+        ORDER BY 
+            CASE WHEN state = 'in' THEN 1 ELSE 2 END ASC,
+            league ASC, 
+            start_time ASC, 
+            external_game_id ASC
+    `
     const result = await pool.query(query)
     return result.rows
 }

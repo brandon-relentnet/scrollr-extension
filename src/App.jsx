@@ -108,11 +108,12 @@ function App() {
         <thead>
           <tr>
             <th style={{ border: '1px solid black', padding: '4px' }}>League</th>
+            <th style={{ border: '1px solid black', padding: '4px' }}>Link</th>
             <th style={{ border: '1px solid black', padding: '4px' }}>Home Team</th>
             <th style={{ border: '1px solid black', padding: '4px' }}>Home Score</th>
-            <th style={{ border: '1px solid black', padding: '4px' }}>Away Team</th>
             <th style={{ border: '1px solid black', padding: '4px' }}>Away Score</th>
-            <th style={{ border: '1px solid black', padding: '4px' }}>Start Time</th>
+            <th style={{ border: '1px solid black', padding: '4px' }}>Away Team</th>
+            <th style={{ border: '1px solid black', padding: '4px' }}>Time</th>
             <th style={{ border: '1px solid black', padding: '4px' }}>State</th>
           </tr>
         </thead>
@@ -120,13 +121,12 @@ function App() {
           {games.map((game) => (
             <tr key={`${game.league}-${game.external_game_id}`}>
               <td style={{ border: '1px solid black', padding: '4px' }}>{game.league}</td>
+              <td style={{ border: '1px solid black', padding: '4px' }}><a href={game.link}>ESPN</a></td>
               <td style={{ border: '1px solid black', padding: '4px' }}>{game.home_team_name}</td>
               <td style={{ border: '1px solid black', padding: '4px' }}>{game.home_team_score}</td>
-              <td style={{ border: '1px solid black', padding: '4px' }}>{game.away_team_name}</td>
               <td style={{ border: '1px solid black', padding: '4px' }}>{game.away_team_score}</td>
-              <td style={{ border: '1px solid black', padding: '4px' }}>
-                {new Date(game.start_time).toLocaleString()}
-              </td>
+              <td style={{ border: '1px solid black', padding: '4px' }}>{game.away_team_name}</td>
+              <td style={{ border: '1px solid black', padding: '4px' }}>{game.short_detail}</td>
               <td style={{ border: '1px solid black', padding: '4px' }}>{game.state}</td>
             </tr>
           ))}
