@@ -4,22 +4,23 @@ const { runDailySchedule } = require('./dailySchedule')
 const schedule = require('node-schedule')
 
 async function main() {
-    // 1. Run ingest to fetch ESPN data and upsert to DB
+    console.log('📌 server.js started. Will do daily schedule at 6 AM plus any dynamic jobs.')
+
+    // 1. Do an initial ingest of all leagues
     console.log('Starting ESPN ingest...')
     await ingestData()
 
-    // 2. Run daily schedule check
+    // 2. Do a daily schedule check
     console.log('Starting daily schedule check...')
     await runDailySchedule()
 
-    // 3. Also schedule a daily run at 6:00 AM
-    schedule.scheduleJob('0 6 * * *', async function () {
+    // 3. Schedule a daily run at 6:00 AM
+    schedule.scheduleJob('0 6 * * *', async () => {
         console.log('[DailySchedule] Running again at 6 AM...')
         await runDailySchedule()
     })
-
-    console.log('server.js started. Will do daily schedule at 6 AM plus any dynamic jobs.')
 }
 
 // Kick it off
 main().catch(err => console.error('server.js Error:', err))
+
