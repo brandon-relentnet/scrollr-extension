@@ -86,8 +86,33 @@ async function areAllGamesFinal(league) {
     return (countNonFinal === 0)
 }
 
+/**
+ * Returns all games from the "games" table.
+ */
+async function getAllGames() {
+    const query = `SELECT * FROM games ORDER BY start_time ASC`
+    const result = await pool.query(query)
+    return result.rows
+}
+
+/**
+ * Returns all games for a given league.
+ */
+async function getGamesByLeague(leagueName) {
+    const query = `
+    SELECT *
+    FROM games
+    WHERE league = $1
+    ORDER BY start_time ASC
+  `
+    const result = await pool.query(query, [leagueName])
+    return result.rows
+}
+
 module.exports = {
     upsertGame,
     getNotFinalGamesToday,
     areAllGamesFinal,
+    getAllGames,         
+    getGamesByLeague     
 }
