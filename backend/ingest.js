@@ -4,7 +4,7 @@ const axios = require('axios')
 const { Client } = require('pg')
 const leagueConfigs = require('./leagueConfigs')
 
-async function ingestData() {
+async function ingestData(leaguesToIngest = leagueConfigs) {
   // 1. Connect to Aurora
   const client = new Client({
     host: process.env.DB_HOST,
@@ -16,7 +16,7 @@ async function ingestData() {
 
   try {
     await client.connect()
-    console.log('Connected to Aurora successfully.')
+    console.log('Connected to Aurora successfully in ingest.js.')
 
     // 2. Prepare the upsert query for the single 'games' table
     const upsertQuery = `
@@ -50,11 +50,11 @@ async function ingestData() {
     `;
 
     // 3. Fetch data from ESPN API for each league
-    for (const { name, slug } of leagueConfigs) {
+    for (const { name, slug } of leaguesToIngest) {
       const url = `${process.env.ESPN_API_URL}/${slug}/scoreboard`;
 
       // Log the fetch
-      console.log(`Fetched data for ${name} from (${slug})...`);
+      console.log(`\nFetched data for ${name} from (${slug})...`);
       const response = await axios.get(url);
 
       // ESPN scoreboard data has `data.events`, each event is a "game"

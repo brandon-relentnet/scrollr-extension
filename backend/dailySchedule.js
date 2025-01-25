@@ -1,6 +1,7 @@
 // dailySchedule.js is used to check the daily schedule of games in the database
 require('dotenv').config()
 const { Client } = require('pg')
+const { ingestData } = require('./ingest')
 
 async function runDailySchedule() {
     const client = new Client({
@@ -21,19 +22,30 @@ async function runDailySchedule() {
             SELECT *
             FROM games
             WHERE
-                DATE(start_time) = CURRENT_DATE
+                DATE(start_time AT TIME ZONE 'UTC') = CURRENT_DATE AT TIME ZONE 'UTC'
                 AND state NOT IN ('post', 'completed', 'final')
             ORDER BY start_time ASC
         `
-        const result = await client.query(query)
 
-        console.log(`\n--- Today's Games (Not Final) ---`)
-        result.rows.forEach(row => {
-            console.log(`${row.league} - game_id=${row.external_game_id} start=${row.start_time} state=${row.state}`)
-        })
+        // Fetch the games that are scheduled for today
+        const result = await client.query(query);
+        const leaguesWithGames = result.rows.map(row => row.league);
 
-        // Might do more logic here:
-        // e.g., schedule a dynamic cron job to poll more frequently near these start times
+        // Log the games that are scheduled for today
+        console.log(`\n--- Today's Games (Not Final) ---`);
+        console.log(`Leagues with upcoming or in-progress games today:`, leaguesWithGames)
+
+        // Filter the leagueConfigs to only include leagues with games today
+        const leagueConfigs = require('./leagueConfigs');
+        const leaguesToPoll = leagueConfigs.filter(cfg => leaguesWithGames.includes(cfg.name));
+
+        // If there are games today, ingest the data for those leagues
+        if (leaguesToPoll.length > 0) {
+            console.log(`\nPolling only these leagues:`, leaguesToPoll.map(l => l.name));
+            await ingestData(leaguesToPoll);
+        } else {
+            console.log(`\nNo leagues have upcoming games today. Skipping ingestion for now.`);
+        };
 
         console.log('\nDaily schedule check complete.')
     } catch (err) {
