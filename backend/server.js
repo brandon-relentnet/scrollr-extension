@@ -1,6 +1,6 @@
 // server.js is the main entry point for the backend. It orchestrates the ingest and daily schedule checks.
 const schedule = require('node-schedule')
-const { startApiServer } = require('./api')
+const { startApiServer, broadcastUpdatedGames } = require('./api') 
 const { ingestData } = require('./ingest')
 const { runDailySchedule } = require('./dailySchedule')
 
@@ -13,6 +13,9 @@ async function main() {
     // 2. Run initial ESPN ingest
     console.log('Starting ESPN ingest...')
     await ingestData()
+
+    // After ingest, broadcast updated data to all WebSocket clients
+    await broadcastUpdatedGames()
 
     // 3. Run daily schedule check
     console.log('Starting daily schedule check...')

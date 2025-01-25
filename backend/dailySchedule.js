@@ -3,6 +3,7 @@ require('dotenv').config()
 const schedule = require('node-schedule')
 const { getNotFinalGamesToday, areAllGamesFinal } = require('./dbQueries')
 const { ingestData } = require('./ingest')
+const { broadcastUpdatedGames } = require('./api')
 
 const scheduledLeagueJobs = {}
 
@@ -91,7 +92,8 @@ function startFrequentPoll(league) {
             // The ingestData function can accept an array of { name, slug }
             // We'll get the slug from leagueConfigs
             await ingestData([{ name: league, slug: getSlugForLeague(league) }])
-
+            await broadcastUpdatedGames(league)
+            
             // Check if all games are final
             const done = await areAllGamesFinal(league)
             if (done) {
