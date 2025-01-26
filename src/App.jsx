@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay } from 'swiper/modules'
+import 'swiper/css'
 
 function App() {
   const [games, setGames] = useState([])
   const [league, setLeague] = useState('')
   const [socket, setSocket] = useState(null)
 
-  // Function to fetch all games or specific league
+  // Fetch function (unchanged)
   const fetchGames = async (selectedLeague) => {
     try {
       let url = 'http://localhost:4000/api/games'
@@ -21,81 +24,71 @@ function App() {
     }
   }
 
-  // On first load, set up Socket.IO and fetch initial games
+  // Socket + initial fetch
   useEffect(() => {
-    // 1) Connect to the Socket.IO server
-    const newSocket = io('http://localhost:4000', {
-      // if you need specific transports or config: e.g. transports: ['websocket'],
-    })
-
-    // 2) Listen for socket connection
+    const newSocket = io('http://localhost:4000')
     newSocket.on('connect', () => {
-      console.log('Connected to server via Socket.IO, socket ID:', newSocket.id)
+      console.log('Socket connected, ID:', newSocket.id)
     })
-
-    // 3) Listen for 'gamesUpdated' events from the server
     newSocket.on('gamesUpdated', (payload) => {
-      console.log('Received gamesUpdated event:', payload)
-
-      // payload might be { league: 'NBA', games: [...] } or { league: 'ALL', games: [...] }
-      // We can decide how we want to handle it based on user’s current league filter
-
+      console.log('gamesUpdated:', payload)
       if (!league) {
-        // If user is viewing "All Leagues," replace with the new data
         if (payload.league === 'ALL') {
-          // if server sends 'ALL', directly set
           setGames(payload.games)
         } else {
-          // server sends a single league update (e.g. "NBA"),
-          // but we want to show everything => we can do a fresh fetch or merge
-          // Easiest approach: do a fresh fetch so we always have up-to-date data
           fetchGames()
         }
       } else {
-        // The user has selected a specific league
-        // If the server’s payload.league matches our user’s selection, update
         if (payload.league === league || payload.league === 'ALL') {
           setGames(payload.games)
-        } else {
-          // It's an update for a different league. If we want to ignore it, do nothing
-          // Or you could still fetch league data to ensure all changes are up to date
         }
       }
     })
-
-    // 4) Cleanup on unmount (disconnect socket)
     setSocket(newSocket)
+
     return () => {
       newSocket.disconnect()
     }
-    // eslint-disable-next-line
-  }, []) // run once on mount
-
-  // On mount also do initial fetch of "All" leagues
-  useEffect(() => {
-    fetchGames()
   }, [])
 
-  // Handler for league select
+  // Initial data fetch
+  useEffect(() => {
+    fetchGames()
+  }, [league])
+
+  // Handle league select
   const handleLeagueChange = (e) => {
     const selected = e.target.value
     setLeague(selected)
+    fetchGames(selected)
+  }
 
-    if (!selected) {
-      // if "All" is selected
-      fetchGames()
-    } else {
-      fetchGames(selected)
-    }
+  const swiperSettings = {
+    modules: [ Autoplay],
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false
+    },
+    loop: true,
+    speed: 600,
+    breakpoints: {
+      640: { slidesPerView: 2 },
+      768: { slidesPerView: 3 },
+      1024: { slidesPerView: 4 },
+    },
   }
 
   return (
-    <div style={{ margin: '2rem' }}>
-      <h1>Sports Scoreboard</h1>
+    <div className="p-4 h-screen bg-slate-900 text-white">
+      <h1 className="text-2xl font-bold mb-4">Sports Scoreboard (Swiper + Tailwind)</h1>
 
-      <div>
-        <label>Filter by League: </label>
-        <select value={league} onChange={handleLeagueChange}>
+      <div className="mb-4">
+        <label className="mr-2 font-semibold">Filter by League:</label>
+        <select
+          className="border rounded p-1"
+          value={league}
+          onChange={handleLeagueChange}
+        >
           <option value="">All Leagues</option>
           <option value="NFL">NFL</option>
           <option value="NBA">NBA</option>
@@ -104,34 +97,36 @@ function App() {
         </select>
       </div>
 
-      <table style={{ marginTop: '1rem', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th style={{ border: '1px solid black', padding: '4px' }}>League</th>
-            <th style={{ border: '1px solid black', padding: '4px' }}>Link</th>
-            <th style={{ border: '1px solid black', padding: '4px' }}>Home Team</th>
-            <th style={{ border: '1px solid black', padding: '4px' }}>Home Score</th>
-            <th style={{ border: '1px solid black', padding: '4px' }}>Away Score</th>
-            <th style={{ border: '1px solid black', padding: '4px' }}>Away Team</th>
-            <th style={{ border: '1px solid black', padding: '4px' }}>Time</th>
-            <th style={{ border: '1px solid black', padding: '4px' }}>State</th>
-          </tr>
-        </thead>
-        <tbody>
-          {games.map((game) => (
-            <tr key={`${game.league}-${game.external_game_id}`}>
-              <td style={{ border: '1px solid black', padding: '4px' }}>{game.league}</td>
-              <td style={{ border: '1px solid black', padding: '4px' }}><a href={game.link}>ESPN</a></td>
-              <td style={{ border: '1px solid black', padding: '4px' }}>{game.home_team_name}</td>
-              <td style={{ border: '1px solid black', padding: '4px' }}>{game.home_team_score}</td>
-              <td style={{ border: '1px solid black', padding: '4px' }}>{game.away_team_score}</td>
-              <td style={{ border: '1px solid black', padding: '4px' }}>{game.away_team_name}</td>
-              <td style={{ border: '1px solid black', padding: '4px' }}>{game.short_detail}</td>
-              <td style={{ border: '1px solid black', padding: '4px' }}>{game.state}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* The Swiper container */}
+      <Swiper {...swiperSettings}>
+        {/* Each game is a SwiperSlide */}
+        {games.map((game) => (
+          <SwiperSlide key={`${game.league}-${game.external_game_id}`}>
+            <div className="border-2 bg-slate-700 border-transparent rounded-lg p-4 mx-2 my-2 text-center">
+              <h2 className="text-xl font-semibold mb-1">{game.league}</h2>
+              <a
+                href={game.link}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-500 underline mb-2 block"
+              >
+                ESPN Link
+              </a>
+              <p className="font-medium">
+                {game.home_team_name} ({game.home_team_score})
+                vs.
+                ({game.away_team_score}) {game.away_team_name}
+              </p>
+              <p className="text-sm text-gray-600 mt-2">
+                Time: {game.short_detail}
+              </p>
+              <p className="text-sm text-gray-600">
+                State: {game.state}
+              </p>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   )
 }
