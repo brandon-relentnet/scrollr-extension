@@ -6,8 +6,7 @@ import Theme from './features/theme/Theme';
 import './css/index.css'
 import App from './App.jsx'
 import Accent from './features/accent/Accent.jsx';
-
-
+import './utils/fontAwesome';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

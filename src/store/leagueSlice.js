@@ -2,9 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const leagueSlice = createSlice({
     name: 'league',
-    initialState: 'all', // Default theme
+    initialState: "", 
     reducers: {
-        setLeague: (state, action) => action.payload, // Set theme based on payload
+        setLeague: (state, action) => action.payload, 
     },
 });
 
