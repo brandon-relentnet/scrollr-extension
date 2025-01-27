@@ -76,21 +76,21 @@ export default function Carousel() {
         autoplay: { delay: 3000, disableOnInteraction: false },
         loop: true,
         speed: 600,
-        spaceBetween: 16,
+        spaceBetween: 8,
         slidesPerView: 'auto',
     }
 
     return (
-        <div className="bottom-0 left-0 z-50 fixed flex bg-base px-2 w-full overflow-hidden">
+        <div className="bottom-0 left-0 z-50 fixed flex bg-base p-2 w-full overflow-hidden">
             <div className="flex items-center w-full h-full">
                 {/* Pinned Events Section */}
                 {pinnedGames.length > 0 && (
-                    <div className="flex flex-shrink-0 mr-2 rounded h-full overflow-hidden">
+                    <div className="flex flex-shrink-0 rounded h-full overflow-hidden">
                         {pinnedGames.map((game) => (
-                            <div key={game.external_game_id} className="m-2" style={{ 
+                            <div key={game.external_game_id} className="mr-2" style={{ 
                                 minWidth: '300px',
                                 maxWidth: '400px',
-                                height: '100%',
+                                height: '150px',
                              }}>
                                 <EventCard game={game} />
                             </div>
@@ -108,7 +108,6 @@ export default function Carousel() {
                                     style={{ 
                                         minWidth: '200px',
                                         maxWidth: '300px',
-                                        height: '100%',
                                      }}
                                     >
                                     <EventCard game={game} />
