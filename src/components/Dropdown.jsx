@@ -5,7 +5,6 @@ export default function Dropdown({
     onSelect,
     label,
     selectedValue = "",
-    onBlur = null,
     onClose = null,
 }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,13 +12,6 @@ export default function Dropdown({
 
     const handleSelect = (value) => {
         onSelect(value);
-        setIsOpen(false);
-    };
-
-    const handleBlur = () => {
-        if (onBlur) {
-            onBlur();
-        }
         setIsOpen(false);
     };
 
@@ -44,10 +36,9 @@ export default function Dropdown({
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                //onBlur={handleBlur}
                 className="w-full px-4 py-2 text-left bg-surface1 text-text shadow rounded flex justify-between items-center hover:bg-surface2"
             >
-                <span>{selectedValue || label}</span>
+                <span>{label}</span>
                 <svg
                     className={`w-4 h-4 text-text ml-2 transform transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
                         }`}

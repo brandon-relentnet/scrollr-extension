@@ -5,8 +5,6 @@ function Theme() {
     const currentTheme = useSelector((state) => state.theme);
 
     useEffect(() => {
-
-        // Add the current theme class to the body
         if (currentTheme) {
             document.body.setAttribute('data-theme', currentTheme);
         }
