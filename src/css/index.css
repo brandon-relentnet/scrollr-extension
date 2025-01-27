@@ -1,0 +1,138 @@
+/* Sans-Serif Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;700;900&display=swap');
+
+/* Serif Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&display=swap');
+
+/* Decorative Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+@import "tailwindcss";
+
+
+@theme {
+        --color-rosewater: #f5e0dc;
+        --color-flamingo: #f2cdcd;
+        --color-pink: #f5c2e7;
+        --color-mauve: #cba6f7;
+        --color-red: #f38ba8;
+        --color-maroon: #eba0ac;
+        --color-peach: #fab387;
+        --color-yellow: #f9e2af;
+        --color-green: #a6e3a1;
+        --color-teal: #94e2d5;
+        --color-sky: #89dceb;
+        --color-sapphire: #74c7ec;
+        --color-blue: #89b4fa;
+        --color-lavender: #b4befe;
+        --color-text: #cdd6f4;
+        --color-subtext1: #bac2de;
+        --color-subtext0: #a6adc8;
+        --color-overlay2: #9399b2;
+        --color-overlay1: #7f849c;
+        --color-overlay0: #6c7086;
+        --color-surface2: #585b70;
+        --color-surface1: #45475a;
+        --color-surface0: #313244;
+        --color-base: #1e1e2e;
+        --color-mantle: #181825;
+        --color-crust: #11111b;
+}
+
+[data-theme="macchiato"] {
+        --color-rosewater: #f4dbd6;
+        --color-flamingo: #f0c6c6;
+        --color-pink: #f5bde6;
+        --color-mauve: #c6a0f6;
+        --color-red: #ed8796;
+        --color-maroon: #ee99a0;
+        --color-peach: #f5a97f;
+        --color-yellow: #eed49f;
+        --color-green: #a6da95;
+        --color-teal: #8bd5ca;
+        --color-sky: #91d7e3;
+        --color-sapphire: #7dc4e4;
+        --color-blue: #8aadf4;
+        --color-lavender: #b7bdf8;
+        --color-text: #cad3f5;
+        --color-subtext1: #b8c0e0;
+        --color-subtext0: #a5adcb;
+        --color-overlay2: #939ab7;
+        --color-overlay1: #8087a2;
+        --color-overlay0: #6e738d;
+        --color-surface2: #5b6078;
+        --color-surface1: #494d64;
+        --color-surface0: #363a4f;
+        --color-base: #24273a;
+        --color-mantle: #1e2030;
+        --color-crust: #181926;
+}
+
+[data-theme="frappe"] {
+        --color-rosewater: #f2d5cf;
+        --color-flamingo: #eebebe;
+        --color-pink: #f4b8e4;
+        --color-mauve: #ca9ee6;
+        --color-red: #e78284;
+        --color-maroon: #ea999c;
+        --color-peach: #ef9f76;
+        --color-yellow: #e5c890;
+        --color-green: #a6d189;
+        --color-teal: #81c8be;
+        --color-sky: #99d1db;
+        --color-sapphire: #85c1dc;
+        --color-blue: #8caae8;
+        --color-lavender: #babbf1;
+        --color-text: #c6d0f5;
+        --color-subtext1: #b5bfe2;
+        --color-subtext0: #a5adce;
+        --color-overlay2: #9399b2;
+        --color-overlay1: #838ba7;
+        --color-overlay0: #737994;
+        --color-surface2: #626880;
+        --color-surface1: #51576d;
+        --color-surface0: #414559;
+        --color-base: #303446;
+        --color-mantle: #292c3c;
+        --color-crust: #232634;
+}
+
+[data-theme="latte"] {
+        --color-rosewater: #dc8a78;
+        --color-flamingo: #dd7878;
+        --color-pink: #ea76cb;
+        --color-mauve: #8839ef;
+        --color-red: #d20f39;
+        --color-maroon: #e64553;
+        --color-peach: #fe640b;
+        --color-yellow: #df8e1d;
+        --color-green: #40a02b;
+        --color-teal: #179299;
+        --color-sky: #04a5e5;
+        --color-sapphire: #209fb5;
+        --color-blue: #1e66f5;
+        --color-lavender: #7287fd;
+        --color-text: #4c4f69;
+        --color-subtext1: #5c5f77;
+        --color-subtext0: #6c6f85;
+        --color-overlay2: #7c7f93;
+        --color-overlay1: #8c8fa1;
+        --color-overlay0: #9ca0b0;
+        --color-surface2: #acb0be;
+        --color-surface1: #bcc0cc;
+        --color-surface0: #ccd0da;
+        --color-base: #eff1f5;
+        --color-mantle: #e6e9ef;
+        --color-crust: #dce0e8;
+}
