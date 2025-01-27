@@ -44,7 +44,7 @@ export default function EventCard({ game }) {
 
   return (
     <div 
-      className="relative border-2 hover:border-accent bg-surface0 mx-2 my-2 p-4 border-transparent rounded-lg text-center text-text transition duration-200"
+      className="relative border-2 hover:border-accent bg-surface0 mx-2 my-2 p-4 border-transparent rounded-lg h-[100%] text-center text-text transition duration-200"
       onClick={handleCardClick}
     >
       {/* PIN BUTTON */}
