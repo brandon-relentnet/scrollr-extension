@@ -4,7 +4,7 @@ import Popup from './components/Popup'
 
 export default function App() {
   return (
-    <div className="h-screen bg-base">
+    <div className="bg-mantle h-screen">
       <Popup />
       <Carousel />
     </div>

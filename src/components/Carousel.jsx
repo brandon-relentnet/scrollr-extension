@@ -81,11 +81,11 @@ export default function Carousel() {
   }
 
   return (
-    <div className='bottom-0 left-0 fixed w-full'>
+    <div className='bottom-0 left-0 fixed bg-base w-full'>
       <Swiper {...swiperSettings}>
         {games.map((game) => (
           <SwiperSlide key={`${game.league}-${game.external_game_id}`}>
-            <div className="border-2 bg-rosewater mx-2 my-2 p-4 border-transparent rounded-lg text-center">
+            <div className="border-2 hover:border-accent bg-surface0 mx-1 my-1 p-4 border-transparent rounded-lg text-center text-text transition duration-200">
               <h2 className="mb-1 font-semibold text-xl">{game.league}</h2>
               <a
                 href={game.link}
