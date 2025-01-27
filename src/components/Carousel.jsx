@@ -76,21 +76,22 @@ export default function Carousel() {
         autoplay: { delay: 3000, disableOnInteraction: false },
         loop: true,
         speed: 600,
-        breakpoints: {
-            640: { slidesPerView: 2 },
-            768: { slidesPerView: 3 },
-            1024: { slidesPerView: 4 },
-        },
+        spaceBetween: 16,
+        slidesPerView: 'auto',
     }
 
     return (
-        <div className="bottom-0 left-0 z-50 fixed flex items-center bg-mantle shadow-t w-full overflow-hidden">
-            <div className="flex w-full h-full">
+        <div className="bottom-0 left-0 z-50 fixed flex bg-base px-2 w-full overflow-hidden">
+            <div className="flex items-center w-full h-full">
                 {/* Pinned Events Section */}
                 {pinnedGames.length > 0 && (
-                    <div className="flex flex-shrink-0 bg-mantle rounded h-full overflow-hidden">
+                    <div className="flex flex-shrink-0 mr-2 rounded h-full overflow-hidden">
                         {pinnedGames.map((game) => (
-                            <div key={game.external_game_id} className="mb-2">
+                            <div key={game.external_game_id} className="m-2" style={{ 
+                                minWidth: '300px',
+                                maxWidth: '400px',
+                                height: '100%',
+                             }}>
                                 <EventCard game={game} />
                             </div>
                         ))}
@@ -102,7 +103,14 @@ export default function Carousel() {
                     {unpinnedGames.length > 0 ? (
                         <Swiper {...swiperSettings}>
                             {unpinnedGames.map((game) => (
-                                <SwiperSlide key={game.external_game_id}>
+                                <SwiperSlide
+                                    key={game.external_game_id}
+                                    style={{ 
+                                        minWidth: '200px',
+                                        maxWidth: '300px',
+                                        height: '100%',
+                                     }}
+                                    >
                                     <EventCard game={game} />
                                 </SwiperSlide>
                             ))}
