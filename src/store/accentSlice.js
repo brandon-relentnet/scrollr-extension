@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const accentSlice = createSlice({
-    name: 'accenter',
+    name: 'accent',
     initialState: 'pink', // Default theme
     reducers: {
         setAccent: (state, action) => action.payload, // Set theme based on payload
