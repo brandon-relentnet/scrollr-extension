@@ -1,6 +1,6 @@
 const pool = require('./db');
 
-const excludedStates = `('post', 'completed', 'final')`;
+const excludedStates = ['post', 'completed', 'final'];
 
 async function getTimeInfo() {
   const query = `
@@ -79,40 +79,42 @@ async function upsertGame(game) {
  * 2. Start Time < tomorrow (00:06:00 UTC)
  */
 async function getNotFinalGamesToday() {
-  // Wait for getTimeInfo to complete and get the time info
   const timeInfo = await getTimeInfo();
 
-  // Dynamically construct the query using timeInfo
   const query = `
     SELECT *
     FROM games
     WHERE
-      start_time >= '${timeInfo.currentDay}'
-      AND start_time < '${timeInfo.nextDay}'
-      AND state NOT IN ${excludedStates}
+      start_time >= $1
+      AND start_time < $2
+      AND state != ALL($3::text[])
     ORDER BY start_time ASC;
   `;
 
-  console.log('SQL Query:', query);
+  const values = [timeInfo.currentDay, timeInfo.nextDay, excludedStates];
 
-  const result = await pool.query(query);
+  console.log('SQL Query:', query, 'Params:', values);
+
+  const result = await pool.query(query, values);
   console.log('getNotFinalGamesToday:', result.rows);
-  return result.rows; // Directly return the rows
+  return result.rows;
 }
 
 /**
  * Checks if all games for a given league are final today.
  */
 async function areAllGamesFinal(league) {
+  const timeInfo = await getTimeInfo();
+
   const query = `
     SELECT COUNT(*) AS cnt
     FROM games
     WHERE league = $1
-      AND DATE(start_time::timestamp AT TIME ZONE 'UTC') = CURRENT_DATE
-      AND state NOT IN ('post', 'completed', 'final');
+      AND DATE(start_time) = $2
+      AND state != ALL($3::text[])
   `;
 
-  const res = await pool.query(query, [league]);
+  const res = await pool.query(query, [league], timeInfo.currentDay, excludedStates);
   const countNonFinal = parseInt(res.rows[0].cnt, 10);
   return countNonFinal === 0; // If countNonFinal is 0, no non-final games remain
 }
@@ -127,7 +129,7 @@ async function getAllGames() {
     ORDER BY 
       CASE WHEN state = 'in' THEN 1 ELSE 2 END ASC,
       league ASC, 
-      start_time::timestamp ASC, 
+      start_time ASC, 
       external_game_id ASC;
   `;
 
@@ -143,7 +145,7 @@ async function getGamesByLeague(leagueName) {
     SELECT *
     FROM games
     WHERE league = $1
-    ORDER BY start_time::timestamp ASC;
+    ORDER BY start_time ASC;
   `;
 
   const result = await pool.query(query, [leagueName]);
