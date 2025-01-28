@@ -40,7 +40,7 @@ async function ingestData(leaguesToIngest = leagueConfigs) {
             logo: team2?.team?.logo || null,
             score: parseInt(team2?.score, 10) || 0,
           },
-          startTime: game.date,
+          startTime: new Date(game.date).toISOString(),
           shortDetail: game.status?.type?.shortDetail || 'N/A',
           state: game.status?.type?.state || 'N/A',
         }
