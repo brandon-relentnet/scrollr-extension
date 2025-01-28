@@ -66,7 +66,7 @@ async function getNotFinalGamesToday() {
   `;
 
   const result = await pool.query(query);
-  //console.log('getNotFinalGamesToday:', result.rows);
+  console.log('getNotFinalGamesToday:', result.rows);
   return result.rows; // Directly return the rows
 }
 
