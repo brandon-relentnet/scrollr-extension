@@ -5,7 +5,7 @@ const { ingestData } = require('./ingest')
 const { runDailySchedule } = require('./dailySchedule')
 
 async function main() {
-    console.log('📌 server.js started. Will do daily schedule at 6 AM plus any dynamic jobs.')
+    console.log('📌 server.js started. Will check for updates hourly (at :00) plus any dynamic jobs.')
 
     // 1. Start Express API on port 4000
     await startApiServer(4000)
@@ -21,9 +21,10 @@ async function main() {
     console.log('Starting daily schedule check...')
     await runDailySchedule()
 
-    // 4. Schedule a daily run at 6:00 AM
-    schedule.scheduleJob('0 6 * * *', async () => {
-        console.log('[DailySchedule] Running again at 6 AM...')
+    // 4. Schedule hourly runs at :00 of every hour
+    schedule.scheduleJob('0 * * * *', async () => {
+        console.log('[HourlySchedule] Running hourly check...')
+        await ingestData()
         await runDailySchedule()
     })
 }
