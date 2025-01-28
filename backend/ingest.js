@@ -2,7 +2,7 @@
 require('dotenv').config()
 const axios = require('axios')
 const leagueConfigs = require('./leagueConfigs')
-const { upsertGame } = require('./dbQueries')
+const { upsertGame, clearTable } = require('./dbQueries')
 
 /**
  * Fetch data from ESPN for the given leagues,
@@ -11,6 +11,8 @@ const { upsertGame } = require('./dbQueries')
  * If no leaguesToIngest is provided, default = all leagueConfigs.
  */
 async function ingestData(leaguesToIngest = leagueConfigs) {
+  await clearTable() // Clear all existing data
+  
   try {
     for (const { name, slug } of leaguesToIngest) {
       const url = `${process.env.ESPN_API_URL}/${slug}/scoreboard`

@@ -21,6 +21,12 @@ async function getTimeInfo() {
   return timeInfo;
 }
 
+async function clearTable() {
+  const query = `TRUNCATE TABLE games;`;
+  await pool.query(query);
+  console.log('All rows in the "games" table have been cleared.');
+}
+
 /**
  * Upsert a single game record into the "games" table.
  */
@@ -158,4 +164,5 @@ module.exports = {
   areAllGamesFinal,
   getAllGames,
   getGamesByLeague,
+  clearTable,
 };
