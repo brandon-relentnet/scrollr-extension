@@ -21,18 +21,6 @@
 
 @import "tailwindcss";
 
-/* In your CSS */
-.swiper {
-        width: 100%;
-        height: 100%;
-}
-
-.swiper-slide {
-        transition: transform 0.3s ease;
-        height: 150px;
-        /* Match your EventCard height */
-}
-
 @theme {
         --color-accent: var(--color-pink);
         --color-rosewater: #f5e0dc;

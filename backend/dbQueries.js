@@ -1,5 +1,26 @@
 const pool = require('./db');
 
+const excludedStates = `('post', 'completed', 'final')`;
+
+async function getTimeInfo() {
+  const query = `
+    SELECT 
+      CURRENT_DATE AT TIME ZONE 'UTC' AS currentDay,
+      (CURRENT_DATE AT TIME ZONE 'UTC' + INTERVAL '1 day') AS nextDay
+  `;
+
+  const result = await pool.query(query);
+
+  // Extract and format the time info
+  const timeInfo = {
+    currentDay: result.rows[0].currentday.toISOString(),
+    nextDay: result.rows[0].nextday.toISOString(),
+  };
+
+  console.log('TIME INFO', timeInfo);
+  return timeInfo;
+}
+
 /**
  * Upsert a single game record into the "games" table.
  */
@@ -44,7 +65,7 @@ async function upsertGame(game) {
     game.awayTeam.name,
     game.awayTeam.logo,
     game.awayTeam.score,
-    game.startTime, // ISO string, no timezone conversion needed
+    game.startTime,
     game.shortDetail,
     game.state,
   ];
@@ -54,16 +75,25 @@ async function upsertGame(game) {
 
 /**
  * Returns all "not-final" games scheduled for TODAY (UTC-based).
+ * 1. Start Time >= today (00:06:00 UTC)
+ * 2. Start Time < tomorrow (00:06:00 UTC)
  */
 async function getNotFinalGamesToday() {
+  // Wait for getTimeInfo to complete and get the time info
+  const timeInfo = await getTimeInfo();
+
+  // Dynamically construct the query using timeInfo
   const query = `
     SELECT *
     FROM games
     WHERE
-      DATE(start_time::timestamp AT TIME ZONE 'UTC') = CURRENT_DATE
-      AND state NOT IN ('post', 'completed', 'final')
-    ORDER BY start_time::timestamp ASC;
+      start_time >= '${timeInfo.currentDay}'
+      AND start_time < '${timeInfo.nextDay}'
+      AND state NOT IN ${excludedStates}
+    ORDER BY start_time ASC;
   `;
+
+  console.log('SQL Query:', query);
 
   const result = await pool.query(query);
   console.log('getNotFinalGamesToday:', result.rows);

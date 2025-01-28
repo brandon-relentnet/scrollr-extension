@@ -23,7 +23,6 @@ console.log('Breakpoints:', breakpointsArray)
 export default function Carousel() {
     const dispatch = useDispatch()
     const [socket, setSocket] = useState(null)
-    const [visibleSlides, setVisibleSlides] = useState(0)
 
     // Redux data
     const selectedLeague = useSelector((state) => state.league)
@@ -96,10 +95,6 @@ export default function Carousel() {
 
     return (
         <>
-            {/* Display the visible slides count */}
-            <div className="absolute bottom-48 right-2 bg-overlay0 text-text p-2 rounded">
-                Visible Slides: {visibleSlides}
-            </div>
             <div className="bottom-0 left-0 z-50 fixed flex bg-base p-2 w-full overflow-hidden">
                 <div className="flex items-center w-full h-full">
                     {/* Pinned Events Section */}
