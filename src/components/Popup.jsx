@@ -3,6 +3,7 @@ import ThemeDropdown from "../features/theme/ThemeDropdown";
 import AccentDropdown from "../features/accent/AccentDropdown";
 import LeagueDropdown from "../features/league/LeagueDropdown";
 import FavoriteTeamDropdown from "../features/teams/FavoriteTeamDropdown";
+import FontFamilyDropdown from "../features/font-family/FontFamilyDropdown";
 
 export default function Popup() {
     return (
@@ -13,6 +14,7 @@ export default function Popup() {
             <ThemeDropdown />
             <AccentDropdown />
             <FavoriteTeamDropdown />
+            <FontFamilyDropdown />
         </div>
     );
 }

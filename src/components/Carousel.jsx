@@ -18,8 +18,6 @@ for (let i = startBreakpoint; i <= endBreakpoint; i += breakpointStep) {
     };
 }
 
-console.log('Breakpoints:', breakpointsArray)
-
 export default function Carousel() {
     const dispatch = useDispatch()
     const [socket, setSocket] = useState(null)
