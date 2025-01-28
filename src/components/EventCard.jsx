@@ -18,7 +18,7 @@ import { pinEvent, unpinEvent } from '../store/pinnedEventsSlice'
  *     ...
  *   }
  */
-export default function EventCard({ game }) {
+export default function EventCard({ game, isVisible }) {
   const dispatch = useDispatch()
 
   // pinnedEvents is an array of IDs (external_game_id)
@@ -67,6 +67,7 @@ export default function EventCard({ game }) {
       <p className="text-gray-600 text-sm">
         State: {game.state}
       </p>
+      <div>Current slide is {isVisible ? 'active' : 'not active'}</div>
     </div>
   )
 }

@@ -8,21 +8,22 @@ import { setGames } from '../store/gamesSlice'
 import EventCard from './EventCard'
 
 const breakpointsArray = {};
-const startBreakpoint = 400;
+const startBreakpoint = 0;
 const endBreakpoint = 8000;
-const breakpointStep = 400;
+const breakpointStep = 320;
 
 for (let i = startBreakpoint; i <= endBreakpoint; i += breakpointStep) {
     breakpointsArray[i] = {
-        slidesPerView: Math.floor(i / 400),
+        slidesPerView: Math.floor(i / 320),
     };
 }
 
-console.log('breakpoints:', breakpointsArray);
+console.log('Breakpoints:', breakpointsArray)
 
 export default function Carousel() {
     const dispatch = useDispatch()
     const [socket, setSocket] = useState(null)
+    const [visibleSlides, setVisibleSlides] = useState(0)
 
     // Redux data
     const selectedLeague = useSelector((state) => state.league)
@@ -89,44 +90,60 @@ export default function Carousel() {
         loop: true,
         speed: 600,
         spaceBetween: 8,
-        //slidesPerView: 'auto',
         breakpoints: breakpointsArray,
+        watchSlidesProgress: true,
+        onSlideChange: (swiper) => {
+            // Update visible slides count based on slidesPerView
+            const slidesPerView = swiper.params.slidesPerView
+            setVisibleSlides(slidesPerView)
+        },
+        onInit: (swiper) => {
+            // Initialize visible slides count
+            const slidesPerView = swiper.params.slidesPerView
+            setVisibleSlides(slidesPerView)
+        },
     }
 
     return (
-        <div className="bottom-0 left-0 z-50 fixed flex bg-base p-2 w-full overflow-hidden">
-            <div className="flex items-center w-full h-full">
-                {/* Pinned Events Section */}
-                {pinnedGames.length > 0 && (
-                    <div className="flex flex-shrink-0 rounded h-full overflow-hidden">
-                        {pinnedGames.map((game) => (
-                            <div key={game.external_game_id} className="mr-2" style={{ 
-                                width: '400px',
-                                height: '150px',
-                             }}>
-                                <EventCard game={game} />
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {/* Unpinned Carousel */}
-                <div className="flex-grow h-full overflow-hidden">
-                    {unpinnedGames.length > 0 ? (
-                        <Swiper {...swiperSettings}>
-                            {unpinnedGames.map((game) => (
-                                <SwiperSlide
-                                    key={game.external_game_id}
-                                    >
+        <>
+            {/* Display the visible slides count */}
+            <div className="absolute bottom-48 right-2 bg-overlay0 text-text p-2 rounded">
+                Visible Slides: {visibleSlides}
+            </div>
+            <div className="bottom-0 left-0 z-50 fixed flex bg-base p-2 w-full overflow-hidden">
+                <div className="flex items-center w-full h-full">
+                    {/* Pinned Events Section */}
+                    {pinnedGames.length > 0 && (
+                        <div className="flex flex-shrink-0 rounded h-full overflow-hidden">
+                            {pinnedGames.map((game) => (
+                                <div key={game.external_game_id} className="mr-2" style={{
+                                    width: '400px',
+                                    height: '150px',
+                                }}>
                                     <EventCard game={game} />
-                                </SwiperSlide>
+                                </div>
                             ))}
-                        </Swiper>
-                    ) : (
-                        <p className="p-4 text-center text-white">No more events to display.</p>
+                        </div>
                     )}
+
+                    {/* Unpinned Carousel */}
+                    <div className="flex-grow h-full overflow-hidden">
+                        {unpinnedGames.length > 0 ? (
+                            <Swiper {...swiperSettings}>
+                                {unpinnedGames.map((game) => (
+                                    <SwiperSlide key={game.external_game_id}>
+                                        {({ isVisible }) => (
+                                            <EventCard game={game} isVisible={isVisible} />
+                                        )}
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        ) : (
+                            <p className="p-4 text-center text-white">No more events to display.</p>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
