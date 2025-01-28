@@ -92,16 +92,6 @@ export default function Carousel() {
         spaceBetween: 8,
         breakpoints: breakpointsArray,
         watchSlidesProgress: true,
-        onSlideChange: (swiper) => {
-            // Update visible slides count based on slidesPerView
-            const slidesPerView = swiper.params.slidesPerView
-            setVisibleSlides(slidesPerView)
-        },
-        onInit: (swiper) => {
-            // Initialize visible slides count
-            const slidesPerView = swiper.params.slidesPerView
-            setVisibleSlides(slidesPerView)
-        },
     }
 
     return (
@@ -132,9 +122,7 @@ export default function Carousel() {
                             <Swiper {...swiperSettings}>
                                 {unpinnedGames.map((game) => (
                                     <SwiperSlide key={game.external_game_id}>
-                                        {({ isVisible }) => (
-                                            <EventCard game={game} isVisible={isVisible} />
-                                        )}
+                                        <EventCard game={game} />
                                     </SwiperSlide>
                                 ))}
                             </Swiper>
