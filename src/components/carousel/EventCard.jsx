@@ -25,45 +25,33 @@ import { setGames } from '../../store/gamesSlice';
 export default function EventCard({ game }) {
   const dispatch = useDispatch()
 
-  //console.log(game);
-
   // pinnedEvents is an array of IDs (external_game_id)
   const pinnedEvents = useSelector((state) => state.pinnedEvents)
   const isPinned = pinnedEvents.includes(game.external_game_id)
 
+  // check if favorite game is pinned
   const favoriteTeams = useSelector((state) => state.favoriteTeams);
-  const selectedLeague = useSelector((state) => state.league);
-  const favoriteTeam = favoriteTeams[selectedLeague] || null;
+  const favoriteTeamName = favoriteTeams[game.league];
+  const isFavoriteTeamPinned = isPinned && (
+    favoriteTeamName === game.home_team_name ||
+    favoriteTeamName === game.away_team_name
+  );
+  console.log('is this one pinned: ', isPinned);
+  console.log('favorite teams: ', favoriteTeams);
+  console.log('game.external_game_id: ', game.external_game_id);
+  console.log('favoriteTeams[game.league]: ', favoriteTeams[game.league]);
+  console.log('game.league: ', game.league);
+  console.log('is favorite pinned: ', isFavoriteTeamPinned);
 
-  // Check if the favorite team is part of this game
-  const isFavoriteTeamPinned = favoriteTeam
-    ? (
-      game.home_team_name === favoriteTeam ||
-      game.away_team_name === favoriteTeam
-    )
-    : false;
-
+  // Toggle pinned state when user clicks
   const handlePinClick = (e) => {
-    e.stopPropagation(); // Prevent click event from propagating to parent
-
-    if (isFavoriteTeamPinned) {
-      const confirmReset = window.confirm(
-        'Are you sure you want to remove your favorite team? All related events will be unpinned.'
-      );
-      if (confirmReset) {
-        dispatch(removeFavoriteTeam({ league: selectedLeague }));
-        dispatch(unpinEvent(game.id));
-      }
+    e.stopPropagation() // avoid any container onClick if needed
+    if (isPinned) {
+      dispatch(unpinEvent(game.external_game_id))
     } else {
-      if (isPinned) {
-        dispatch(unpinEvent(game.id));
-      } else {
-        dispatch(pinEvent(game.id));
-      }
+      dispatch(pinEvent(game.external_game_id))
     }
-  };
-
-  console.log(isFavoriteTeamPinned);
+  }
 
   // Optional: open the ESPN link on card click
   const handleCardClick = () => {
@@ -82,7 +70,7 @@ export default function EventCard({ game }) {
 */
 
   return (
-    <div 
+    <div
       className="relative border-2 hover:border-accent bg-surface0 p-4 border-transparent rounded-lg w-auto h-[150px] text-center text-text transition duration-200"
       onClick={handleCardClick}
     >
@@ -96,8 +84,8 @@ export default function EventCard({ game }) {
 
       <h2 className="mb-1 font-semibold text-xl">{game.league}</h2>
       <p className="font-medium">
-        {game.away_team_name} ({game.away_team_score}) 
-        vs. 
+        {game.away_team_name} ({game.away_team_score})
+        vs.
         ({game.home_team_score}) {game.home_team_name}
       </p>
       <p className="mt-2 text-gray-600 text-sm">

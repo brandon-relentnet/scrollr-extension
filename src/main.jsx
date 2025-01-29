@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux';
 import store from './store';
@@ -10,12 +9,10 @@ import FontFamily from './features/font-family/FontFamily.jsx';
 import './utils/fontAwesome';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
     <Provider store={store}>
       <Theme />
       <Accent />
       <FontFamily />
       <App />
     </Provider>
-  </StrictMode>,
 )
