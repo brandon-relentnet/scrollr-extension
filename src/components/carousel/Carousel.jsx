@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
-import { setGames } from '../store/gamesSlice'
+import { setGames } from '../../store/gamesSlice'
 import EventCard from './EventCard'
 
 const breakpointsArray = {};
@@ -25,7 +25,7 @@ export default function Carousel() {
     // Redux data
     const selectedLeague = useSelector((state) => state.league)
     const games = useSelector((state) => state.games)
-    const pinnedEvents = useSelector((state) => state.pinnedEvents) // array of external_game_ids
+    const pinnedEvents = useSelector((state) => state.pinnedEvents)
 
     // fetch logic
     const fetchGames = async (league) => {

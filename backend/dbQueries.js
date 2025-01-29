@@ -5,8 +5,8 @@ const excludedStates = ['post', 'completed', 'final'];
 async function getTimeInfo() {
   const query = `
     SELECT 
-      CURRENT_DATE AT TIME ZONE 'UTC' AS currentDay,
-      (CURRENT_DATE AT TIME ZONE 'UTC' + INTERVAL '1 day') AS nextDay
+      (CURRENT_DATE AT TIME ZONE 'CST') AS currentDay,
+      ((CURRENT_DATE + INTERVAL '1 day') AT TIME ZONE 'CST') AS nextDay
   `;
 
   const result = await pool.query(query);
@@ -120,7 +120,9 @@ async function areAllGamesFinal(league) {
       AND state != ALL($3::text[])
   `;
 
-  const res = await pool.query(query, [league], timeInfo.currentDay, excludedStates);
+  const values = [league, timeInfo.currentDay, excludedStates];
+
+  const res = await pool.query(query, values);
   const countNonFinal = parseInt(res.rows[0].cnt, 10);
   return countNonFinal === 0; // If countNonFinal is 0, no non-final games remain
 }
