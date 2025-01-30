@@ -8,7 +8,7 @@ const Navbar = ({ activeTab, setActiveTab }) => {
             <div className="flex items-center space-x-2">
                 <button
                     onClick={() => setActiveTab('home')}
-                    className={`flex items-center justify-center p-2 rounded ${activeTab === 'home' ? 'bg-surface0' : 'hover:bg-base'
+                    className={`flex items-center cursor-pointer justify-center p-2 rounded ${activeTab === 'home' ? 'bg-surface0' : 'hover:bg-base'
                         }`}
                     aria-label="Home"
                 >
@@ -41,7 +41,7 @@ const Navbar = ({ activeTab, setActiveTab }) => {
                 {/* Settings Button */}
                 <button
                     onClick={() => setActiveTab('settings')}
-                    className={`flex items-center justify-center p-2 rounded ${activeTab === 'settings' ? 'bg-surface0' : 'hover:bg-base'
+                    className={`flex items-center justify-center cursor-pointer p-2 rounded ${activeTab === 'settings' ? 'bg-surface0' : 'hover:bg-base'
                         }`}
                     aria-label="Settings"
                 >
