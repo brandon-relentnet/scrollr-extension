@@ -82,7 +82,7 @@ export default function Carousel() {
 
     const swiperSettings = {
         modules: [Autoplay],
-        autoplay: { delay: 10000, disableOnInteraction: false },
+        autoplay: { delay: 3000, disableOnInteraction: false },
         breakpointsBase: 'container',
         loop: true,
         speed: 600,
@@ -93,7 +93,7 @@ export default function Carousel() {
 
     return (
         <>
-            <div className="bottom-0 left-0 z-50 fixed flex bg-base p-2 w-full overflow-hidden">
+            <div className="bg-base p-2 w-full overflow-hidden">
                 <div className="flex items-center w-full h-full">
                     {/* Pinned Events Section */}
                     {pinnedGames.length > 0 && (
