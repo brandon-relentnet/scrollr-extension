@@ -5,7 +5,6 @@ import { pinEvent, unpinEvent } from '../../store/pinnedEventsSlice'
 import { removeFavoriteTeam } from '../../store/favoriteTeamsSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapPin, faTimes, faDotCircle, faStar } from '@fortawesome/free-solid-svg-icons';
-import { setGames } from '../../store/gamesSlice';
 
 /**
  * Renders a single "game" in the scoreboard shape:
@@ -25,6 +24,9 @@ import { setGames } from '../../store/gamesSlice';
 export default function EventCard({ game }) {
   const dispatch = useDispatch()
 
+  // Check if the game is live
+  const isLive = game.state.toLowerCase() === 'in';
+
   // pinnedEvents is an array of IDs (external_game_id)
   const pinnedEvents = useSelector((state) => state.pinnedEvents)
   const isPinned = pinnedEvents.includes(game.external_game_id)
@@ -36,12 +38,6 @@ export default function EventCard({ game }) {
     favoriteTeamName === game.home_team_name ||
     favoriteTeamName === game.away_team_name
   );
-  //console.log('favoriteTeams[game.league]: ', favoriteTeams[game.league]);
-  //console.log('is this one pinned: ', isPinned);
-  console.log('favorite teams: ', favoriteTeams);
-  //console.log('game.external_game_id: ', game.external_game_id);
-  //console.log('game.league: ', game.league);
-  console.log('is favorite pinned: ', isFavoriteTeamPinned);
 
   // Toggle pinned state when user clicks
   const handlePinClick = (e) => {
@@ -59,7 +55,6 @@ export default function EventCard({ game }) {
         dispatch(pinEvent(game.external_game_id))
       }
     }
-
   }
 
   // Optional: open the ESPN link on card click
@@ -69,40 +64,51 @@ export default function EventCard({ game }) {
     }
   }
 
-  /*
-    // Determine the icon and styling based on pinning state
-    const pinIcon = isFavoriteTeamPinned ? faStar : isPinned ? faTimes : faMapPin;
-    const pinClass = `text-lg transition duration-300 hover:scale-110 ${isFavoriteTeamPinned ? 'text-accent' :
-        isPinned ? 'text-overlay1 hover:text-red' :
-            'text-overlay1 hover:text-accent'
-        }`;
-*/
+  // Determine the icon and styling based on pinning state
+  const pinIcon = isFavoriteTeamPinned ? faStar : isPinned ? faTimes : faMapPin;
+  const pinClass = `text-lg transition duration-300 hover:scale-110 ${isFavoriteTeamPinned ? 'text-accent' :
+    isPinned ? 'text-overlay1 hover:text-red' :
+      'text-overlay1 hover:text-accent'
+    }`;
+
 
   return (
     <div
-      className="relative border-2 hover:border-accent bg-surface0 p-4 border-transparent rounded-lg w-auto h-[150px] text-center text-text transition duration-200"
+      className="relative border-2 hover:border-accent bg-surface0 cursor-pointer p-4 border-transparent rounded-lg w-auto h-[150px] text-center text-text transition duration-200"
       onClick={handleCardClick}
     >
+      {/* LIVE Indicator */}
+      {isLive && (
+        <div className="absolute top-1 left-1 flex text-xs items-center p-0.5">
+          <FontAwesomeIcon icon={faDotCircle} className="text-red mr-1" />
+          <span className="text-red font-bold">LIVE</span>
+        </div>
+      )}
+
       {/* PIN BUTTON */}
       <button
         onClick={handlePinClick}
-        className="top-1 right-1 absolute bg-overlay0 px-2 py-1 rounded text-sm"
+        className="top-1 right-1 absolute px-2 py-1 rounded text-sm cursor-pointer"
+        title={isFavoriteTeamPinned ? 'Reset Favorite Team' : (isPinned ? 'Unpin Event' : 'Pin Event')}
       >
-        {isPinned ? 'Unpin' : 'Pin'}
+        <FontAwesomeIcon icon={pinIcon} className={pinClass} />
       </button>
 
-      <h2 className="mb-1 font-semibold text-xl">{game.league}</h2>
-      <p className="font-medium">
-        {game.away_team_name} ({game.away_team_score})
-        vs.
-        ({game.home_team_score}) {game.home_team_name}
-      </p>
-      <p className="mt-2 text-gray-600 text-sm">
-        Time: {game.short_detail}
-      </p>
-      <p className="text-gray-600 text-sm">
-        State: {game.state}
-      </p>
+      {/* GAME INFO */}
+      <div>
+        <h2 className="mb-1 font-semibold text-xl">{game.league}</h2>
+        <p className="font-medium">
+          {game.away_team_name} ({game.away_team_score})
+          vs.
+          ({game.home_team_score}) {game.home_team_name}
+        </p>
+        <p className="mt-2 text-gray-600 text-sm">
+          {game.short_detail}
+        </p>
+        <p className="text-gray-600 text-sm">
+          {game.state}
+        </p>
+      </div>
     </div>
   )
 }

@@ -91,8 +91,6 @@ export default function Carousel() {
         watchSlidesProgress: true,
     }
 
-    console.log('test flag')
-
     return (
         <>
             <div className="bottom-0 left-0 z-50 fixed flex bg-base p-2 w-full overflow-hidden">
