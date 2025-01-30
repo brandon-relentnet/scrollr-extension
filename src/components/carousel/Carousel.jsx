@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import { setGames } from '../../store/gamesSlice'
-import EventCard from './EventCard'
+import GamesCard from './GamesCard'
 
 const breakpointsArray = {};
 const startBreakpoint = 0;
@@ -82,7 +82,7 @@ export default function Carousel() {
 
     const swiperSettings = {
         modules: [Autoplay],
-        autoplay: { delay: 3000, disableOnInteraction: false },
+        autoplay: { delay: 10000, disableOnInteraction: false },
         breakpointsBase: 'container',
         loop: true,
         speed: 600,
@@ -103,7 +103,7 @@ export default function Carousel() {
                                     width: '400px',
                                     height: '150px',
                                 }}>
-                                    <EventCard game={game} />
+                                    <GamesCard game={game} />
                                 </div>
                             ))}
                         </div>
@@ -115,7 +115,7 @@ export default function Carousel() {
                             <Swiper {...swiperSettings}>
                                 {unpinnedGames.map((game) => (
                                     <SwiperSlide key={game.external_game_id}>
-                                        <EventCard game={game} />
+                                        <GamesCard game={game} />
                                     </SwiperSlide>
                                 ))}
                             </Swiper>

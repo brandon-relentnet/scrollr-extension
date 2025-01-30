@@ -12,8 +12,10 @@ import { faMapPin, faTimes, faDotCircle, faStar } from '@fortawesome/free-solid-
  *     external_game_id,
  *     league,
  *     home_team_name,
+ *     home_team_logo,
  *     home_team_score,
  *     away_team_name,
+ *     away_team_logo,
  *     away_team_score,
  *     link,
  *     short_detail,
@@ -21,11 +23,12 @@ import { faMapPin, faTimes, faDotCircle, faStar } from '@fortawesome/free-solid-
  *     ...
  *   }
  */
-export default function EventCard({ game }) {
+export default function GamesCard({ game }) {
   const dispatch = useDispatch()
 
-  // Check if the game is live
+  // Check game state to determine styling
   const isLive = game.state.toLowerCase() === 'in';
+  const isGameOver = game.state.toLowerCase() === 'final';
 
   // pinnedEvents is an array of IDs (external_game_id)
   const pinnedEvents = useSelector((state) => state.pinnedEvents)
@@ -71,10 +74,22 @@ export default function EventCard({ game }) {
       'text-overlay1 hover:text-accent'
     }`;
 
+  let homeScoreClass = '';
+  let awayScoreClass = '';
+
+  if (isGameOver) {
+    if (game.home_team_score > game.away_team_score) {
+      homeScoreClass = 'text-green';
+      awayScoreClass = 'text-red';
+    } else if (game.away_team_score > game.home_team_score) {
+      awayScoreClass = 'text-green';
+      homeScoreClass = 'text-red';
+    }
+  }
 
   return (
     <div
-      className="relative border-2 hover:border-accent bg-surface0 cursor-pointer p-4 border-transparent rounded-lg w-auto h-[150px] text-center text-text transition duration-200"
+      className="relative border-2 flex items-center justify-center hover:border-accent bg-surface0 cursor-pointer p-4 border-transparent rounded-lg w-auto h-[150px] text-center text-text transition duration-200"
       onClick={handleCardClick}
     >
       {/* LIVE Indicator */}
@@ -95,19 +110,36 @@ export default function EventCard({ game }) {
       </button>
 
       {/* GAME INFO */}
-      <div>
-        <h2 className="mb-1 font-semibold text-xl">{game.league}</h2>
-        <p className="font-medium">
-          {game.away_team_name} ({game.away_team_score})
-          vs.
-          ({game.home_team_score}) {game.home_team_name}
-        </p>
-        <p className="mt-2 text-gray-600 text-sm">
-          {game.short_detail}
-        </p>
-        <p className="text-gray-600 text-sm">
-          {game.state}
-        </p>
+      <div className='flex justify-between items-center gap-2 w-full h-full'>
+        {/* TEAM LOGOS */}
+        <div className="flex-1 flex items-center justify-end min-w-0 max-w-[33%] h-full">
+          <img
+            src={game.away_team_logo}
+            alt={`${game.away_team_name} logo`}
+            className="object-contain max-h-full w-auto max-w-full"
+          />
+        </div>
+
+        {/* SCORES AND DETAILS */}
+        <div className="flex-shrink-0 mx-2 min-w-[100px]">
+          <div className="flex items-center font-bold text-text justify-center">
+            <span className={`text-xl ${awayScoreClass}`}>{game.away_team_score}</span>
+            <span className="mx-1">-</span>
+            <span className={`text-xl ${homeScoreClass}`}>{game.home_team_score}</span>
+          </div>
+          <p className="text-xs text-subtext0 text-center break-words mt-1">
+            {game.short_detail}
+          </p>
+        </div>
+
+        {/* TEAM LOGOS */}
+        <div className="flex-1 flex items-center min-w-0 max-w-[33%] h-full">
+          <img
+            src={game.home_team_logo}
+            alt={`${game.home_team_name} logo`}
+            className="object-contain max-h-full w-auto max-w-full"
+          />
+        </div>
       </div>
     </div>
   )
