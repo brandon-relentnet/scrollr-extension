@@ -102,7 +102,7 @@ async function getNotFinalGamesToday() {
   console.log('SQL Query:', query, 'Params:', values);
 
   const result = await pool.query(query, values);
-  console.log('getNotFinalGamesToday:', result.rows);
+  //console.log('getNotFinalGamesToday:', result.rows);
   return result.rows;
 }
 

@@ -36,21 +36,30 @@ export default function EventCard({ game }) {
     favoriteTeamName === game.home_team_name ||
     favoriteTeamName === game.away_team_name
   );
-  console.log('is this one pinned: ', isPinned);
+  //console.log('favoriteTeams[game.league]: ', favoriteTeams[game.league]);
+  //console.log('is this one pinned: ', isPinned);
   console.log('favorite teams: ', favoriteTeams);
-  console.log('game.external_game_id: ', game.external_game_id);
-  console.log('favoriteTeams[game.league]: ', favoriteTeams[game.league]);
-  console.log('game.league: ', game.league);
+  //console.log('game.external_game_id: ', game.external_game_id);
+  //console.log('game.league: ', game.league);
   console.log('is favorite pinned: ', isFavoriteTeamPinned);
 
   // Toggle pinned state when user clicks
   const handlePinClick = (e) => {
-    e.stopPropagation() // avoid any container onClick if needed
-    if (isPinned) {
-      dispatch(unpinEvent(game.external_game_id))
+    e.stopPropagation()
+    if (isFavoriteTeamPinned) {
+      const confirmReset = window.confirm('Are you sure you want to remove your favorite team? All related events will be unpinned.');
+      if (confirmReset) {
+        dispatch(removeFavoriteTeam({ league: game.league }));
+        dispatch(unpinEvent(game.external_game_id))
+      }
     } else {
-      dispatch(pinEvent(game.external_game_id))
+      if (isPinned) {
+        dispatch(unpinEvent(game.external_game_id))
+      } else {
+        dispatch(pinEvent(game.external_game_id))
+      }
     }
+
   }
 
   // Optional: open the ESPN link on card click
