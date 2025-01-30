@@ -1,98 +1,37 @@
-// src/components/EventCard.jsx
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { pinEvent, unpinEvent } from '../../store/pinnedEventsSlice'
-import { removeFavoriteTeam } from '../../store/favoriteTeamsSlice'
+import React from 'react';
+import PinButton from './PinButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapPin, faTimes, faDotCircle, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faDotCircle } from '@fortawesome/free-solid-svg-icons';
 
-/**
- * Renders a single "game" in the scoreboard shape:
- *   {
- *     external_game_id,
- *     league,
- *     home_team_name,
- *     home_team_logo,
- *     home_team_score,
- *     away_team_name,
- *     away_team_logo,
- *     away_team_score,
- *     link,
- *     short_detail,
- *     state,
- *     ...
- *   }
- */
-export default function GamesCard({ game }) {
-  const dispatch = useDispatch()
-
-  // Check game state to determine styling
+function GamesCard({ game }) {
+  // Game state checks
   const isLive = game.state.toLowerCase() === 'in';
   const isGameOver = game.state.toLowerCase() === 'final';
 
-  // pinnedEvents is an array of IDs (external_game_id)
-  const pinnedEvents = useSelector((state) => state.pinnedEvents)
-  const isPinned = pinnedEvents.includes(game.external_game_id)
-
-  // check if favorite game is pinned
-  const favoriteTeams = useSelector((state) => state.favoriteTeams);
-  const favoriteTeamName = favoriteTeams[game.league];
-  const isFavoriteTeamPinned = isPinned && (
-    favoriteTeamName === game.home_team_name ||
-    favoriteTeamName === game.away_team_name
-  );
-
-  // Toggle pinned state when user clicks
-  const handlePinClick = (e) => {
-    e.stopPropagation()
-    if (isFavoriteTeamPinned) {
-      const confirmReset = window.confirm('Are you sure you want to remove your favorite team? All related events will be unpinned.');
-      if (confirmReset) {
-        dispatch(removeFavoriteTeam({ league: game.league }));
-        dispatch(unpinEvent(game.external_game_id))
-      }
-    } else {
-      if (isPinned) {
-        dispatch(unpinEvent(game.external_game_id))
-      } else {
-        dispatch(pinEvent(game.external_game_id))
-      }
-    }
-  }
-
-  // Optional: open the ESPN link on card click
+  // Handle card click
   const handleCardClick = () => {
-    if (game.link) {
-      window.open(game.link, '_blank')
+    if (game?.link?.startsWith('http')) {
+      window.open(game.link, '_blank', 'noopener,noreferrer');
     }
-  }
+  };
 
-  // Determine the icon and styling based on pinning state
-  const pinIcon = isFavoriteTeamPinned ? faStar : isPinned ? faTimes : faMapPin;
-  const pinClass = `text-lg transition duration-300 hover:scale-110 ${isFavoriteTeamPinned ? 'text-accent' :
-    isPinned ? 'text-overlay1 hover:text-red' :
-      'text-overlay1 hover:text-accent'
-    }`;
+  // Score display logic
+  const getWinningTeam = () => {
+    if (!isGameOver) return null;
+    return game.home_team_score > game.away_team_score
+      ? 'home'
+      : (game.away_team_score > game.home_team_score ? 'away' : null);
+  };
 
-  let homeScoreClass = '';
-  let awayScoreClass = '';
-
-  if (isGameOver) {
-    if (game.home_team_score > game.away_team_score) {
-      homeScoreClass = 'text-green';
-      awayScoreClass = 'text-red';
-    } else if (game.away_team_score > game.home_team_score) {
-      awayScoreClass = 'text-green';
-      homeScoreClass = 'text-red';
-    }
-  }
+  const winner = getWinningTeam();
+  const homeScoreClass = winner === 'home' ? 'text-green' : (winner === 'away' ? 'text-red' : '');
+  const awayScoreClass = winner === 'away' ? 'text-green' : (winner === 'home' ? 'text-red' : '');
 
   return (
     <div
       className="relative border-2 flex items-center justify-center hover:border-accent bg-surface0 cursor-pointer p-4 border-transparent rounded-lg w-auto h-[150px] text-center text-text transition duration-200"
       onClick={handleCardClick}
     >
-      {/* LIVE Indicator */}
       {isLive && (
         <div className="absolute top-1 left-1 flex text-xs items-center p-0.5">
           <FontAwesomeIcon icon={faDotCircle} className="text-red mr-1" />
@@ -100,18 +39,16 @@ export default function GamesCard({ game }) {
         </div>
       )}
 
-      {/* PIN BUTTON */}
-      <button
-        onClick={handlePinClick}
-        className="top-1 right-1 absolute px-2 py-1 rounded text-sm cursor-pointer"
-        title={isFavoriteTeamPinned ? 'Reset Favorite Team' : (isPinned ? 'Unpin Event' : 'Pin Event')}
-      >
-        <FontAwesomeIcon icon={pinIcon} className={pinClass} />
-      </button>
+      <PinButton
+        gameId={game.external_game_id}
+        league={game.league}
+        homeTeam={game.home_team_name}
+        awayTeam={game.away_team_name}
+      />
 
-      {/* GAME INFO */}
+      {/* Rest of the game card content remains the same */}
       <div className='flex justify-between items-center gap-2 w-full h-full'>
-        {/* TEAM LOGOS */}
+        {/* Team logos */}
         <div className="flex-1 flex items-center justify-end min-w-0 max-w-[33%] h-full">
           <img
             src={game.away_team_logo}
@@ -120,7 +57,7 @@ export default function GamesCard({ game }) {
           />
         </div>
 
-        {/* SCORES AND DETAILS */}
+        {/* Scores */}
         <div className="flex-shrink-0 mx-2 min-w-[100px]">
           <div className="flex items-center font-bold text-text justify-center">
             <span className={`text-xl ${awayScoreClass}`}>{game.away_team_score}</span>
@@ -132,7 +69,7 @@ export default function GamesCard({ game }) {
           </p>
         </div>
 
-        {/* TEAM LOGOS */}
+        {/* Team logos */}
         <div className="flex-1 flex items-center min-w-0 max-w-[33%] h-full">
           <img
             src={game.home_team_logo}
@@ -142,5 +79,7 @@ export default function GamesCard({ game }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
+
+export default React.memo(GamesCard);
