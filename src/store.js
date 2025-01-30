@@ -9,6 +9,7 @@ import favoriteTeamsReducer from './store/favoriteTeamsSlice';
 import pinnedEventsReducer from './store/pinnedEventsSlice';
 import gamesReducer from './store/gamesSlice';
 import fontFamilyReducer from './store/fontFamilySlice';
+import iframeReducer from './store/iframeSlice';
 
 const preloadedState = loadState();
 
@@ -21,6 +22,7 @@ const store = configureStore({
         pinnedEvents: pinnedEventsReducer,
         games: gamesReducer,
         fontFamily: fontFamilyReducer,
+        iframe: iframeReducer,
     },
     preloadedState, // Load initial state from local storage
 });

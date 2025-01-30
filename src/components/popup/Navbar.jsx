@@ -1,10 +1,28 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faUser, faHouse } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faUser, faHouse, faPowerOff } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleIframe } from '../../store/iframeSlice';
 
 const Navbar = ({ activeTab, setActiveTab }) => {
+    const dispatch = useDispatch();
+    const iframeEnabled = useSelector(state => state.iframe.enabled);
+
+    const handlePowerToggle = () => {
+        dispatch(toggleIframe());
+        // Send message to content script
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs[0]?.id) {
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    action: 'TOGGLE_IFRAME',
+                    enabled: !iframeEnabled
+                });
+            }
+        });
+    };
+
     return (
         <nav className="flex items-center justify-between p-4 text-text sticky top-0 z-10 border-b-1 border-overlay0">
-            {/* Logo */}
+            {/* Left side of Navbar */}
             <div className="flex items-center space-x-2">
                 <button
                     onClick={() => setActiveTab('home')}
@@ -14,10 +32,23 @@ const Navbar = ({ activeTab, setActiveTab }) => {
                 >
                     <FontAwesomeIcon icon={faHouse} className="h-5 w-5" />
                 </button>
+                {/* Power Button */}
+                <button
+                    onClick={handlePowerToggle}
+                    className={`flex items-center cursor-pointer justify-center p-2 rounded ${iframeEnabled ? 'bg-surface0 text-accent' : 'hover:bg-base'
+                        }`}
+                    aria-label="Toggle Iframe"
+                >
+                    <FontAwesomeIcon icon={faPowerOff} className="h-5 w-5" />
+                </button>
             </div>
+
+            {/* Title */}
             <div className="text-lg font-semibold p-2">
                 Scrollr v1.0
             </div>
+
+            {/* Right Side of Navbar */}
             <div className="flex space-x-2">
                 {/* Accounts Button with Tooltip */}
                 <div className="relative group">
