@@ -7,6 +7,7 @@ import leagueReducer from './leagueSlice';
 import favoriteTeamsReducer from './favoriteTeamsSlice';
 import gamesReducer from './gamesSlice';
 import iframeReducer from './iframeSlice';
+import carouselReducer from './carouselSlice';
 
 const rootReducer = combineReducers({
     theme: themeReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     favoriteTeams: favoriteTeamsReducer,
     games: gamesReducer,
     iframe: iframeReducer,
+    carousel: carouselReducer,
 });
 
 export default rootReducer;

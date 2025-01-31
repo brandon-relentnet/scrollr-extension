@@ -21,11 +21,16 @@ async function getTimeInfo() {
   return timeInfo;
 }
 
-async function clearTable() {
-  const query = `TRUNCATE TABLE games;`;
-  await pool.query(query);
-  console.log('All rows in the "games" table have been cleared.');
+async function clearTable(leaguesToIngest) {
+  const leagueNames = leaguesToIngest.map(league => league.name); // Extract names
+  const placeholders = leagueNames.map((_, index) => `$${index + 1}`).join(', '); // Create placeholders for query
+
+  const query = `DELETE FROM games WHERE league IN (${placeholders});`;
+  await pool.query(query, leagueNames);
+
+  console.log(`All rows with league_type ${JSON.stringify(leagueNames)} have been deleted.`);
 }
+
 
 /**
  * Upsert a single game record into the "games" table.

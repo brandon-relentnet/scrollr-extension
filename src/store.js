@@ -10,6 +10,7 @@ import pinnedEventsReducer from './store/pinnedEventsSlice';
 import gamesReducer from './store/gamesSlice';
 import fontFamilyReducer from './store/fontFamilySlice';
 import iframeReducer from './store/iframeSlice';
+import carouselReducer from './store/carouselSlice';
 
 const preloadedState = loadState();
 
@@ -23,6 +24,7 @@ const store = configureStore({
         games: gamesReducer,
         fontFamily: fontFamilyReducer,
         iframe: iframeReducer,
+        carousel: carouselReducer,
     },
     preloadedState, // Load initial state from local storage
 });

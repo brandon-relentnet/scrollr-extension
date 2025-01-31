@@ -11,7 +11,9 @@ const { upsertGame, clearTable } = require('./dbQueries')
  * If no leaguesToIngest is provided, default = all leagueConfigs.
  */
 async function ingestData(leaguesToIngest = leagueConfigs) {
-  await clearTable() // Clear all existing data
+
+  console.log('leagueConfigs:', leaguesToIngest)
+  await clearTable(leaguesToIngest) // Clear all existing data
   
   try {
     for (const { name, slug } of leaguesToIngest) {
