@@ -17,12 +17,12 @@ export default function TradesCarousel({ swiperSettings }) {
 
     // Fetch initial data
     useEffect(() => {
-        const newSocket = io('http://localhost:4001');
+        const newSocket = io(`${import.meta.env.VITE_SOCKET_URL}`);
         setSocket(newSocket);
 
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:4001/api/financial');
+                const response = await fetch(`${import.meta.env.VITE_TRADES_API}`);
                 const data = await response.json();
 
                 const formattedData = data.reduce((acc, item) => ({
