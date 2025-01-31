@@ -2,7 +2,7 @@ import React from 'react';
 import TradesPinButton from './TradesPinButton';
 import { FaArrowUp, FaArrowDown, FaMinus } from 'react-icons/fa';
 
-const StockCard = ({ symbol, data }) => {
+const TradesCard = ({ symbol, data }) => {
     const isDataComplete = data && typeof data.price === 'number';
 
     // Safe number formatting
@@ -35,15 +35,15 @@ const StockCard = ({ symbol, data }) => {
     switch (direction) {
         case 'up':
             ArrowIcon = FaArrowUp;
-            changeColor = 'text-green-500';
+            changeColor = 'text-green';
             break;
         case 'down':
             ArrowIcon = FaArrowDown;
-            changeColor = 'text-red-500';
+            changeColor = 'text-red';
             break;
         default:
             ArrowIcon = FaMinus;
-            changeColor = 'text-gray-400';
+            changeColor = 'text-overlay0';
     }
 
     const yahooFinanceUrl = `https://finance.yahoo.com/quote/${symbol}`;
@@ -59,27 +59,29 @@ const StockCard = ({ symbol, data }) => {
             onClick={handleCardClick}
         >
             <TradesPinButton symbol={symbol} />
-            <h2 className='text-xl font-bold mb-2'>{symbol}</h2>
-            <p className="text-2xl font-mono mb-2">
-                ${formatNumber(price)}
-            </p>
 
-            <div className={`flex items-center ${changeColor}`}>
-                <span className='mr-2'>
-                    <ArrowIcon className="inline-block" />
-                </span>
-                <span className='text-sm'>
-                    {formatNumber(priceChange)} ({formatNumber(percentageChange)}%)
-                </span>
-            </div>
-
-            {previousClose && (
-                <div className="text-xs text-gray-500 mt-1">
-                    Prev Close: ${formatNumber(previousClose)}
+            <div className='flex justify-evenly items-center w-full h-full'>
+                <div className='flex flex-col items-start justify-center'>
+                    <h2 className='text-xl font-bold'>{symbol}</h2>
+                    <p className="text-2xl font-mono">${formatNumber(price)}</p>
                 </div>
-            )}
+
+                <div className={`flex flex-col items-end justify-center`}>
+                    <div className={`flex items-center ${changeColor}`}>
+                        <ArrowIcon className="mr-1" />
+                        <span className='text-sm'>
+                            {formatNumber(priceChange)} ({formatNumber(percentageChange)}%)
+                        </span>
+                    </div>
+                    {previousClose && (
+                        <div className="text-xs text-overlay0 mt-1">
+                            Prev Close: ${formatNumber(previousClose)}
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
 
-export default StockCard;
+export default TradesCard;

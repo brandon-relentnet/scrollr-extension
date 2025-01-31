@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useSelector } from 'react-redux';
-import StockCard from './StockCard';
+import TradesCard from './TradesCard';
 
 export default function TradesCarousel({ swiperSettings }) {
     const [stockData, setStockData] = useState({});
@@ -91,7 +91,7 @@ export default function TradesCarousel({ swiperSettings }) {
                                 className="mr-2"
                                 style={{ width: '400px', height: '150px' }}
                             >
-                                <StockCard symbol={item.symbol} data={item} />
+                                <TradesCard symbol={item.symbol} data={item} />
                             </div>
                         ))}
                     </div>
@@ -103,7 +103,7 @@ export default function TradesCarousel({ swiperSettings }) {
                         <Swiper {...swiperSettings}>
                             {unpinnedStocks.map((item) => (
                                 <SwiperSlide key={item.symbol}>
-                                    <StockCard symbol={item.symbol} data={item} />
+                                    <TradesCard symbol={item.symbol} data={item} />
                                 </SwiperSlide>
                             ))}
                         </Swiper>
