@@ -1,5 +1,5 @@
 import React from 'react';
-import PinButton from './PinButton';
+import GamesPinButton from './GamesPinButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDotCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -39,7 +39,7 @@ function GamesCard({ game }) {
         </div>
       )}
 
-      <PinButton
+      <GamesPinButton
         gameId={game.external_game_id}
         league={game.league}
         homeTeam={game.home_team_name}

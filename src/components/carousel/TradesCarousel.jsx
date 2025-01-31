@@ -1,15 +1,19 @@
-// components/carousels/TradesCarousel.jsx
+// src/components/carousels/TradesCarousel.jsx
 import React, { useEffect, useState } from 'react';
-import StockCard from './StockCard';
 import { io } from 'socket.io-client';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import { useSelector } from 'react-redux';
+import StockCard from './StockCard';
 
 export default function TradesCarousel({ swiperSettings }) {
     const [stockData, setStockData] = useState({});
     const [socket, setSocket] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Get pinned trades from Redux
+    const pinnedTrades = useSelector((state) => state.pinnedTrades);
 
     // Fetch initial data
     useEffect(() => {
@@ -71,20 +75,42 @@ export default function TradesCarousel({ swiperSettings }) {
 
     const stocksArray = Object.values(stockData);
 
+    // Separate pinned vs. unpinned trades
+    const pinnedStocks = stocksArray.filter(item => pinnedTrades.includes(item.symbol));
+    const unpinnedStocks = stocksArray.filter(item => !pinnedTrades.includes(item.symbol));
+
     return (
         <div className="bg-base p-2 w-full overflow-hidden">
             <div className="flex items-center w-full h-full">
-                {stocksArray.length === 0 ? (
-                    <p className="text-center">No market data available...</p>
-                ) : (
-                    <Swiper {...swiperSettings}>
-                        {stocksArray.map((item) => (
-                            <SwiperSlide key={item.symbol}>
+                {/* Pinned Trades Section */}
+                {pinnedStocks.length > 0 && (
+                    <div className="flex flex-shrink-0 rounded h-full overflow-hidden">
+                        {pinnedStocks.map((item) => (
+                            <div
+                                key={item.symbol}
+                                className="mr-2"
+                                style={{ width: '400px', height: '150px' }}
+                            >
                                 <StockCard symbol={item.symbol} data={item} />
-                            </SwiperSlide>
+                            </div>
                         ))}
-                    </Swiper>
+                    </div>
                 )}
+
+                {/* Unpinned Carousel */}
+                <div className="flex-grow h-full overflow-hidden">
+                    {unpinnedStocks.length > 0 ? (
+                        <Swiper {...swiperSettings}>
+                            {unpinnedStocks.map((item) => (
+                                <SwiperSlide key={item.symbol}>
+                                    <StockCard symbol={item.symbol} data={item} />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    ) : (
+                        <p className="p-4 text-center text-white">No market data available...</p>
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -1,4 +1,5 @@
 import React from 'react';
+import TradesPinButton from './TradesPinButton';
 import { FaArrowUp, FaArrowDown, FaMinus } from 'react-icons/fa';
 
 const StockCard = ({ symbol, data }) => {
@@ -47,35 +48,37 @@ const StockCard = ({ symbol, data }) => {
 
     const yahooFinanceUrl = `https://finance.yahoo.com/quote/${symbol}`;
 
+    // Handle card click
+    const handleCardClick = () => {
+        window.open(yahooFinanceUrl, '_blank', 'noopener,noreferrer');
+    };
+
     return (
-        <a
-            href={yahooFinanceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:no-underline"
+        <div
+            className='relative border-2 flex items-center justify-center hover:border-accent bg-surface0 cursor-pointer p-4 border-transparent rounded-lg w-auto h-[150px] text-center text-text transition duration-200'
+            onClick={handleCardClick}
         >
-            <div className='relative border-2 flex items-center justify-center hover:border-accent bg-surface0 cursor-pointer p-4 border-transparent rounded-lg w-auto h-[150px] text-center text-text transition duration-200'>
-                <h2 className='text-xl font-bold mb-2'>{symbol}</h2>
-                <p className="text-2xl font-mono mb-2">
-                    ${formatNumber(price)}
-                </p>
+            <TradesPinButton symbol={symbol} />
+            <h2 className='text-xl font-bold mb-2'>{symbol}</h2>
+            <p className="text-2xl font-mono mb-2">
+                ${formatNumber(price)}
+            </p>
 
-                <div className={`flex items-center ${changeColor}`}>
-                    <span className='mr-2'>
-                        <ArrowIcon className="inline-block" />
-                    </span>
-                    <span className='text-sm'>
-                        {formatNumber(priceChange)} ({formatNumber(percentageChange)}%)
-                    </span>
-                </div>
-
-                {previousClose && (
-                    <div className="text-xs text-gray-500 mt-1">
-                        Prev Close: ${formatNumber(previousClose)}
-                    </div>
-                )}
+            <div className={`flex items-center ${changeColor}`}>
+                <span className='mr-2'>
+                    <ArrowIcon className="inline-block" />
+                </span>
+                <span className='text-sm'>
+                    {formatNumber(priceChange)} ({formatNumber(percentageChange)}%)
+                </span>
             </div>
-        </a>
+
+            {previousClose && (
+                <div className="text-xs text-gray-500 mt-1">
+                    Prev Close: ${formatNumber(previousClose)}
+                </div>
+            )}
+        </div>
     );
 };
 

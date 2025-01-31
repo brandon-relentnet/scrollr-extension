@@ -5,7 +5,7 @@ import { faMapPin, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
 import { pinEvent, unpinEvent } from '../../store/pinnedEventsSlice';
 import { removeFavoriteTeam } from '../../store/favoriteTeamsSlice';
 
-const PinButton = ({ gameId, league, homeTeam, awayTeam }) => {
+const GamesPinButton = ({ gameId, league, homeTeam, awayTeam }) => {
     const dispatch = useDispatch();
 
     // Get state from Redux
@@ -59,4 +59,4 @@ const PinButton = ({ gameId, league, homeTeam, awayTeam }) => {
     );
 };
 
-export default React.memo(PinButton);
+export default React.memo(GamesPinButton);
