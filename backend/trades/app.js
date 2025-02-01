@@ -3,7 +3,8 @@ const express = require('express');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-const financialRoutes = require('./financial');
+// Import your new trades route
+const tradesRoutes = require('./trades');
 const finnhubWS = require('./finnhubWebSocket');
 const tradeService = require('./tradeService');
 require('dotenv').config();
@@ -11,7 +12,9 @@ require('dotenv').config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/api/financial', financialRoutes);
+
+// Mount the trades route so endpoints start with /api/trades
+app.use('/api/trades', tradesRoutes);
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

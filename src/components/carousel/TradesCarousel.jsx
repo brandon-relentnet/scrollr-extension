@@ -17,7 +17,7 @@ export default function TradesCarousel({ swiperSettings }) {
 
     // Fetch initial data
     useEffect(() => {
-        const newSocket = io(`${import.meta.env.VITE_SOCKET_URL}`);
+        const newSocket = io(`${import.meta.env.VITE_TRADES_API}`);
         setSocket(newSocket);
 
         const fetchData = async () => {
