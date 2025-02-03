@@ -31,7 +31,7 @@ export default function GamesCarousel({ swiperSettings }) {
 
     // socket init
     useEffect(() => {
-        const newSocket = io(`${import.meta.env.VITE_SOCKET_URL}`);
+        const newSocket = io(`${import.meta.env.VITE_SOCKET_GAMES}`);
         newSocket.on('connect', () => {
             console.log('Socket connected, ID:', newSocket.id);
         });
