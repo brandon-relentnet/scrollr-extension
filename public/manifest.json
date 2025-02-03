@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Scrollr Official",
-  "version": "1.0",
+  "name": "Scrollr",
+  "version": "0.1",
   "permissions": [
     "storage",
     "activeTab",
